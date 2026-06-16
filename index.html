@@ -3,82 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>البث المباشر - TV FAST</title>
-    <!-- استدعاء مكتبة البث المباشر الفورية لمنع تعليق الزر -->
-    <script src="https://jsdelivr.net"></script>
+    <title>TV FAST - بث مباشر</title>
     <style>
-        body {
-            background-color: #111;
-            color: white;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 10px;
-            text-align: center;
-        }
-        header h1 {
-            color: #ff0000;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #ff0000;
-            padding-bottom: 10px;
-        }
-        .main-container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .player-container {
-            width: 100%;
-            background: #000;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0px 4px 10px rgba(255, 0, 0, 0.3);
-        }
-        video { 
-            width: 100%; 
-            aspect-ratio: 16 / 9; 
-            display: block;
-        }
+        body { background-color: #111; color: white; font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        .play-btn { display: block; background: #ea3232; color: white; padding: 20px; border-radius: 8px; font-size: 18px; font-weight: bold; text-decoration: none; margin-top: 50px; box-shadow: 0 4px 10px rgba(234,50,50,0.4); }
     </style>
 </head>
 <body>
+    <h1>TV FAST</h1>
+    <!-- هذا الرابط يجبر نظام الأندرويد على فتح البث داخل مشغل YTV Player فوراً وبأعلى سرعة -->
+    <a href="intent://asmrasmr.live:8080/638109080/95827171997/1246118#Intent;scheme=http;package=com.mxtech.videoplayer.ad;end" class="play-btn">
+    ▶ تشغيل القناة عبر مشغل MX Player
+</a>
 
-    <header>
-        <h1>TV FAST</h1>
-    </header>
-
-    <div class="main-container">
-        <div class="player-container">
-            <!-- مشغل فيديو فوري مع إعدادات تقليل وقت الانتظار -->
-            <video id="video" autoplay playsinline controls preload="metadata"></video>
-        </div>
-    </div>
-
-    <script>
-        var video = document.getElementById('video');
-        
-        // تجميع الرابط بشكل آمن ومجزأ
-        var p1 = "http://";
-        var p2 = "asmrasmr.live";
-        var p3 = ":8080/";
-        var p4 = "638109080/";
-        var p5 = "95827171997/";
-        var p6 = "1246118";
-        var streamUrl = p1 + p2 + p3 + p4 + p5 + p6;
-
-        if (Hls.isSupported()) {
-            var hls = new Hls({
-                maxBufferLength: 3,       // تقليل حجم الانتظار لـ 3 ثوانٍ فقط لتسريع البدء
-                maxMaxBufferLength: 6,    
-                liveBackoffDistance: 0,   // التشغيل اللحظي للبث المباشر
-                enableWorker: true
-            });
-            hls.loadSource(streamUrl);
-            hls.attachMedia(video);
-            hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                video.play().catch(function(e) { console.log("تحتاج للضغط على زر التشغيل يدوياً"); });
-            });
-        } else {
-            video.src = streamUrl;
-        }
-    </script>
 </body>
 </html>
