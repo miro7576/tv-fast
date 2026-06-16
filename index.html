@@ -1,9 +1,14 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>البث المباشر - TV FAST</title>
+    <title>TV FAST - البث المباشر</title>
+    
+    <!-- استدعاء مشغل Clappr العالمي القوي في فك تشفير قنوات IPTV -->
+    <script type="text/javascript" src="https://jsdelivr.net"></script>
+    
     <style>
         body {
             background-color: #141414;
@@ -24,8 +29,15 @@
         }
         header h1 { margin: 0; font-size: 1.8rem; color: #e50914; }
         .main-container { width: 100%; max-width: 800px; padding: 20px; box-sizing: border-box; }
-        .player-wrapper { position: relative; width: 100%; background-color: #000; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-        video { width: 100%; height: auto; aspect-ratio: 16 / 9; display: block; }
+        .player-wrapper { 
+            width: 100%; 
+            background-color: #000; 
+            border-radius: 12px; 
+            overflow: hidden; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5); 
+        }
+        /* جعل المشغل متجاوب مع شاشات الهواتف */
+        #player { width: 100%; aspect-ratio: 16 / 9; }
     </style>
 </head>
 <body>
@@ -36,13 +48,28 @@
 
     <div class="main-container">
         <div class="player-wrapper">
-            <!-- المشغل يستقبل البث الآمن والمحمي الممرر من سيرفر Render الخاص بك -->
-            <video controls preload="auto" playsinline webkit-playsinline autoplay>
-                <source src="/stream/256120.m3u8" type="application/x-mpegURL">
-                متصفحك لا يدعم مشغل الفيديو المباشر.
-            </video>
+            <!-- حاوية المشغل -->
+            <div id="player"></div>
         </div>
     </div>
 
+    <script>
+        // تشغيل البث المباشر مباشرة عبر المتصفح لتفادي حظر خوادم Render
+        var player = new Clappr.Player({
+            source: "http://lynxiptv.xyz",
+            parentId: "#player",
+            preload: 'auto',
+            autoPlay: true,
+            width: '100%',
+            height: '100%',
+            mimeType: "application/x-mpegURL",
+            plugins: {
+                playback: {
+                    playInline: true,
+                    recycleVideo: true
+                }
+            }
+        });
+    </script>
 </body>
 </html>
