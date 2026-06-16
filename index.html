@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TV FAST - المشغل المباشر</title>
+    <title>TV FAST - المشغل المباشر السريع</title>
     <style>
         * { box-sizing: border-box; }
         body { background-color: #121212; color: white; text-align: center; font-family: sans-serif; padding: 20px; }
@@ -13,21 +13,23 @@
         .channels-grid { display: grid; grid-template-columns: 1fr; gap: 15px; max-width: 500px; margin: 0 auto; }
         .btn { background: #e50914; color: white; padding: 18px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 18px; display: block; transition: 0.2s; border: none; cursor: pointer; }
         .btn:hover { background: #b80710; }
+        .vlc-btn { background: #ff8800; }
+        .vlc-btn:hover { background: #cc6d00; }
     </style>
 </head>
 <body>
 
     <header>
         <h1>TV FAST</h1>
-        <p>انقر على القناة للتشغيل بوضع ملء الشاشة فوراً</p>
+        <p>اختر طريقة التشغيل المفضلة لديك بملء الشاشة:</p>
     </header>
 
     <div class="channels-grid">
-        <!-- الروابط المحدثة لفتح مشغل الفيديو الافتراضي في الهاتف مباشرة دون متجر بلاي -->
-        <a class="btn" href="intent://asmrasmr.live:8080/live/638109080/95827171997/1246118.m3u8#Intent;scheme=http;type=video/*;package=org.videolan.vlc;S.title=beIN MAX 1 HD;end">beIN SPORTS MAX 1 HD</a>
-        <a class="btn" href="intent://asmrasmr.live:8080/live/638109080/95827171997/1246118.m3u8#Intent;scheme=http;type=video/*;package=org.videolan.vlc;S.title=beIN MAX 1 SD;end">beIN SPORTS MAX 1 SD</a>
-        <a class="btn" href="intent://asmrasmr.live:8080/live/638109080/95827171997/1246118.m3u8#Intent;scheme=http;type=video/*;package=org.videolan.vlc;S.title=beIN MAX 2 HD;end">beIN SPORTS MAX 2 HD</a>
-        <a class="btn" href="intent://asmrasmr.live:8080/live/638109080/95827171997/1246118.m3u8#Intent;scheme=http;type=video/*;package=org.videolan.vlc;S.title=beIN MAX 2 SD;end">beIN SPORTS MAX 2 SD</a>
+        <!-- الخيار الأول: التشغيل المباشر عبر بروتوكول البث الذكي المستقر -->
+        <a class="btn vlc-btn" href="vlc://http://asmrasmr.live">beIN SPORTS MAX 1 HD</a>
+        <a class="btn vlc-btn" href="vlc://http://asmrasmr.live">beIN SPORTS MAX 1 SD</a>
+        <a class="btn vlc-btn" href="vlc://http://asmrasmr.live">beIN SPORTS MAX 2 HD</a>
+        <a class="btn vlc-btn" href="vlc://http://asmrasmr.live">beIN SPORTS MAX 2 SD</a>
     </div>
 
 </body>
