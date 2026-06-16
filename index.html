@@ -3,15 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TV Fast</title>
+    <title>البث المباشر - TV FAST</title>
+    
+    <!-- حل مشكلة حظر المتصفحات للروابط غير الآمنة على الهواتف -->
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    
     <style>
-        body { background-color: #141414; color: #ffffff; font-family: sans-serif; text-align: center; padding-top: 100px; }
-        h1 { color: #e50914; font-size: 3rem; }
-        p { color: #ccc; font-size: 1.2rem; }
+        body {
+            background-color: #141414;
+            color: #ffffff;
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        header {
+            width: 100%;
+            background-color: #000000;
+            padding: 15px 0;
+            text-align: center;
+            border-bottom: 3px solid #e50914;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            color: #e50914;
+        }
+        .main-container {
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .player-wrapper {
+            position: relative;
+            width: 100%;
+            background-color: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        /* مشغل متجاوب بالكامل مع حجم شاشة أي هاتف */
+        video {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 16 / 9;
+            display: block;
+        }
     </style>
 </head>
 <body>
-    <h1>TV FAST</h1>
-    <p>مرحباً بك! السيرفر يعمل الآن بنجاح ويعرض صفحة الـ HTML عبر Flask.</p>
+
+    <header>
+        <h1>TV FAST</h1>
+    </header>
+
+    <div class="main-container">
+        <div class="player-wrapper">
+            <!-- استخدام مشغل الهاتف الافتراضي الأصلي بدون أي سكريبت خارجي -->
+            <video 
+                controls 
+                preload="auto" 
+                playsinline 
+                webkit-playsinline 
+                autoplay>
+                <source src="http://ibo.lynxiptv.com/live/777685932038/VJQBOrw29f/256120.m3u8" type="application/x-mpegURL">
+                <source src="http://ibo.lynxiptv.com/live/777685932038/VJQBOrw29f/256120.m3u8" type="application/x-mpegURL">
+                متصفحك لا يدعم مشغل الفيديو المباشر.
+            </video>
+        </div>
+    </div>
+
 </body>
 </html>
