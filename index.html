@@ -3,68 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TV FAST - المشغل المباشر</title>
-    <!-- تضمين مكتبة مشغل الفيديو المتطور للمتصفحات -->
-    <link href="https://zencdn.net" rel="stylesheet" />
+    <title>TV FAST - المشغل السريع</title>
     <style>
         * { box-sizing: border-box; }
-        /* تغيير الخلفية إلى بيضاء لتأكيد التحديث، وتعديل لون النص ليكون واضحاً */
-        body { background-color: #ffffff; color: #121212; text-align: center; font-family: sans-serif; padding: 10px; margin: 0; }
-        header { margin: 15px 0; }
-        header h1 { color: #e50914; font-size: 24px; margin: 5px; }
-        header p { color: #555; font-size: 14px; margin: 5px; }
-        
-        /* واجهة مشغل الفيديو المدمج */
-        .video-container { max-width: 600px; margin: 0 auto 20px auto; background: #000; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .video-js { width: 100% !important; height: auto; aspect-ratio: 16/9; }
-
-        .channels-grid { display: grid; grid-template-columns: 1fr; gap: 12px; max-width: 500px; margin: 0 auto; padding: 0 10px; }
-        .btn { background: #f5f5f5; color: #121212; padding: 16px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px; display: block; border: 2px solid #ccc; cursor: pointer; transition: 0.2s; text-align: right; }
-        .btn:hover, .btn.active { background: #e50914; border-color: #e50914; color: white; }
+        body { background-color: #121212; color: white; text-align: center; font-family: sans-serif; padding: 20px; margin: 0; }
+        header { margin-bottom: 30px; }
+        header h1 { color: #e50914; font-size: 28px; }
+        header p { color: #aaa; font-size: 16px; }
+        .channels-grid { display: grid; grid-template-columns: 1fr; gap: 15px; max-width: 500px; margin: 0 auto; }
+        .btn { background: #1e1e1e; color: white; padding: 18px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 18px; display: block; border: 2px solid #333; cursor: pointer; transition: 0.2s; text-align: center; }
+        .btn:hover { background: #e50914; border-color: #e50914; }
     </style>
 </head>
 <body>
 
     <header>
         <h1>TV FAST</h1>
-        <p>البث المباشر داخل المتصفح - ملء الشاشة تلقائيًا</p>
+        <p>انقر على القناة للتشغيل الفوري بملء الشاشة دون انقطاع</p>
     </header>
 
-    <!-- مشغل الفيديو المدمج في الصفحة -->
-    <div class="video-container">
-        <video id="my-video" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" width="640" height="360" data-setup='{"fluid": true}'>
-            <source src="http://asmrasmr.live" type="application/x-mpegURL">
-            <p class="vjs-no-js">برجاء تفعيل الجافا سكريبت لتشغيل الفيديو</p>
-        </video>
-    </div>
-
-    <!-- أزرار القنوات بالترتيب المطلوب -->
     <div class="channels-grid">
-        <button class="btn active" onclick="playChannel('http://asmrasmr.live', this)">beIN SPORTS MAX 1 HD</button>
-        <button class="btn" onclick="playChannel('http://asmrasmr.live', this)">beIN SPORTS MAX 1 SD</button>
-        <button class="btn" onclick="playChannel('http://asmrasmr.live', this)">beIN SPORTS MAX 2 HD</button>
-        <button class="btn" onclick="playChannel('http://asmrasmr.live', this)">beIN SPORTS MAX 2 SD</button>
+        <!-- الروابط مدمجة بالكامل لفتح مشغل أندرويد الداخلي المستقر -->
+        <a class="btn" href="intent:#Intent;action=android.intent.action.VIEW;data=http://asmrasmr.live:8080/live/638109080/95827171997/1246118.m3u8">beIN SPORTS MAX 1 HD</a>
+        <a class="btn" href="intent:#Intent;action=android.intent.action.VIEW;data=http://asmrasmr.live:8080/live/638109080/95827171997/1246118.m3u8">beIN SPORTS MAX 1 SD</a>
+        <a class="btn" href="intent:#Intent;action=android.intent.action.VIEW;data=http://asmrasmr.live:8080/live/638109080/95827171997/1246118.m3u8">beIN SPORTS MAX 2 HD</a>
+        <a class="btn" href="intent:#Intent;action=android.intent.action.VIEW;data=http://asmrasmr.live:8080/live/638109080/95827171997/1246118.m3u8">beIN SPORTS MAX 2 SD</a>
     </div>
 
-    <!-- سكربت التحكم وتشغيل ملء الشاشة دون انقطاع -->
-    <script src="https://zencdn.net"></script>
-    <script>
-        var player = videojs('my-video');
-
-        function playChannel(url, element) {
-            player.src({ src: url, type: 'application/x-mpegURL' });
-            player.play();
-
-            if (player.requestFullscreen) {
-                player.requestFullscreen();
-            } else if (player.webkitRequestFullscreen) {
-                player.webkitRequestFullscreen();
-            }
-
-            var buttons = document.querySelectorAll('.btn');
-            buttons.forEach(function(btn) { btn.classList.remove('active'); });
-            element.classList.add('active');
-        }
-    </script>
 </body>
 </html>
