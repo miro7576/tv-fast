@@ -3,18 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TV FAST - بث مباشر</title>
+    <title>TV FAST - Mido TV المشغل</title>
     <style>
-        body { background-color: #111; color: white; font-family: Arial, sans-serif; text-align: center; padding: 20px; }
-        .play-btn { display: block; background: #ea3232; color: white; padding: 20px; border-radius: 8px; font-size: 18px; font-weight: bold; text-decoration: none; margin-top: 50px; box-shadow: 0 4px 10px rgba(234,50,50,0.4); }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #121212; color: #ffffff; padding: 20px; text-align: center; }
+        header { margin-bottom: 30px; padding-bottom: 15px; border-bottom: 2px solid #e50914; }
+        header h1 { color: #e50914; font-size: 28px; letter-spacing: 1px; }
+        header p { color: #aaa; font-size: 14px; margin-top: 5px; }
+        .channels-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 1000px; margin: 0 auto; }
+        .channel-card { background: #1e1e1e; border: 1px solid #333; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; transition: transform 0.2s, border-color 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        .channel-card:hover { transform: translateY(-5px); border-color: #e50914; }
+        .channel-name { font-size: 18px; font-weight: bold; margin-bottom: 15px; color: #f5f5f5; }
+        .badge { display: inline-block; padding: 4px 8px; font-size: 12px; border-radius: 4px; margin-bottom: 15px; font-weight: bold; }
+        .hd { background-color: #007bff; color: white; }
+        .sd { background-color: #28a745; color: white; }
+        .play-btn { width: 100%; background: #e50914; color: white; padding: 12px; border-radius: 8px; font-size: 16px; font-weight: bold; text-decoration: none; display: inline-block; transition: background 0.2s; box-shadow: 0 4px 10px rgba(229, 9, 20, 0.3); }
+        .play-btn:hover { background: #b80710; }
     </style>
 </head>
 <body>
-    <h1>TV FAST</h1>
-    <!-- هذا الرابط يجبر نظام الأندرويد على فتح البث داخل مشغل YTV Player فوراً وبأعلى سرعة -->
-    <a href="intent://asmrasmr.live:8080/638109080/95827171997/1246118#Intent;scheme=http;package=com.mxtech.videoplayer.ad;end" class="play-btn">
-    ▶ تشغيل القناة عبر مشغل MX Player
-</a>
-
+    <header>
+        <h1>TV FAST</h1>
+        <p>اختر القناة للتشغيل الفوري داخل تطبيق Mido TV</p>
+    </header>
+    <div class="channels-grid">
+        <div class="channel-card">
+            <div class="channel-name">beIN SPORTS MAX 1 HD</div>
+            <span class="badge hd">HD HIGH QUALITY</span>
+            <button onclick="playChannel('http://asmrasmr.live')" class="play-btn">▶ شاهد الان</button>
+        </div>
+        <div class="channel-card">
+            <div class="channel-name">beIN SPORTS MAX 1 SD</div>
+            <span class="badge sd">SD LOW QUALITY</span>
+            <button onclick="playChannel('http://asmrasmr.live')" class="play-btn">▶ شاهد الأن</button>
+        </div>
+        <div class="channel-card">
+            <div class="channel-name">beIN SPORTS MAX 2 HD</div>
+            <span class="badge hd">HD HIGH QUALITY</span>
+            <button onclick="playChannel('http://asmrasmr.live')" class="play-btn">▶ شاهد الأن</button>
+        </div>
+        <div class="channel-card">
+            <div class="channel-name">beIN SPORTS MAX 2 SD</div>
+            <span class="badge sd">SD LOW QUALITY</span>
+            <button onclick="playChannel('http://asmrasmr.live')" class="play-btn">▶ شاهد الأن</button>
+        </div>
+    </div>
+    <script>
+        function playChannel(originalUrl) {
+            const currentHost = window.location.origin;
+            const proxyUrl = currentHost + "/proxy?url=" + encodeURIComponent(originalUrl);
+            const intentUri = "intent://play?url=" + encodeURIComponent(proxyUrl) + "#Intent;scheme=http;package=com.mido.tv;end";
+            window.location.href = intentUri;
+        }
+    </script>
 </body>
 </html>
