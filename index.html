@@ -19,8 +19,6 @@
         .sd { background-color: #28a745; color: white; }
         .play-btn { width: 100%; background: #e50914; color: white; padding: 12px; border-radius: 8px; font-size: 16px; font-weight: bold; text-decoration: none; display: inline-block; transition: background 0.2s; box-shadow: 0 4px 10px rgba(229, 9, 20, 0.3); border: none; cursor: pointer; }
         .play-btn:hover { background: #b80710; }
-        
-        /* تصميم مشغل الفيديو المدمج بملء الشاشة */
         #video-container { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black; z-index: 9999; }
         video { width: 100%; height: 100%; }
         .close-btn { position: absolute; top: 20px; right: 20px; background: rgba(229, 9, 20, 0.8); color: white; border: none; padding: 10px 20px; font-weight: bold; border-radius: 5px; cursor: pointer; z-index: 10000; }
@@ -43,28 +41,28 @@
         <div class="channel-card">
             <div class="channel-name">beIN SPORTS MAX 1 HD</div>
             <span class="badge hd">HD HIGH QUALITY</span>
-            <button onclick="playChannel('http://asmrasmr.live')" class="play-btn">▶ شاهد الان</button>
+            <button onclick="playChannel('http://asmrasmr.live:8080/live/638109080/95827171997/1246118.m3u8')" class="play-btn">▶ شاهد الان</button>
         </div>
 
         <!-- القناة 2: beIN SPORTS MAX 1 SD -->
         <div class="channel-card">
             <div class="channel-name">beIN SPORTS MAX 1 SD</div>
             <span class="badge sd">SD LOW QUALITY</span>
-            <button onclick="playChannel('http://asmrasmr.live')" class="play-btn">▶ شاهد الأن</button>
+            <button onclick="playChannel('http://asmrasmr.live:8080/live/638109080/95827171997/1246118.m3u8')" class="play-btn">▶ شاهد الأن</button>
         </div>
 
         <!-- القناة 3: beIN SPORTS MAX 2 HD -->
         <div class="channel-card">
             <div class="channel-name">beIN SPORTS MAX 2 HD</div>
             <span class="badge hd">HD HIGH QUALITY</span>
-            <button onclick="playChannel('http://asmrasmr.live')" class="play-btn">▶ شاهد الأن</button>
+            <button onclick="playChannel('http://asmrasmr.live:8080/live/638109080/95827171997/1246118.m3u8')" class="play-btn">▶ شاهد الأن</button>
         </div>
 
         <!-- القناة 4: beIN SPORTS MAX 2 SD -->
         <div class="channel-card">
             <div class="channel-name">beIN SPORTS MAX 2 SD</div>
             <span class="badge sd">SD LOW QUALITY</span>
-            <button onclick="playChannel('http://asmrasmr.live')" class="play-btn">▶ شاهد الأن</button>
+            <button onclick="playChannel('http://asmrasmr.live:8080/live/638109080/95827171997/1246118.m3u8')" class="play-btn">▶ شاهد الأن</button>
         </div>
     </div>
 
@@ -72,23 +70,17 @@
         function playChannel(originalUrl) {
             const currentHost = window.location.origin;
             const proxyUrl = currentHost + "/proxy?url=" + encodeURIComponent(originalUrl);
-            
             const container = document.getElementById('video-container');
             const player = document.getElementById('main-player');
-            
             container.style.display = 'block';
             player.src = proxyUrl;
             player.play();
-            
-            // طلب ملء الشاشة تلقائياً
             if (container.requestFullscreen) container.requestFullscreen();
             else if (container.webkitRequestFullscreen) container.webkitRequestFullscreen();
         }
-
         function closeVideo() {
             const container = document.getElementById('video-container');
             const player = document.getElementById('main-player');
-            
             player.pause();
             player.src = "";
             container.style.display = 'none';
