@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>البث المباشر - TV FAST</title>
-    <!-- استدعاء مشغل HLS الذكي لتسريع تحميل القنوات وتخطي البطء -->
-    <script src="https://jsdelivr.net"></script>
     <style>
         body {
             background-color: #111;
@@ -25,7 +23,7 @@
             max-width: 800px;
             margin: 0 auto;
         }
-        .player-wrapper {
+        .player-container {
             width: 100%;
             background: #000;
             border-radius: 8px;
@@ -36,7 +34,6 @@
             width: 100%; 
             aspect-ratio: 16 / 9; 
             display: block;
-            background: #000;
         }
     </style>
 </head>
@@ -47,37 +44,10 @@
     </header>
 
     <div class="main-container">
-        <div class="player-wrapper">
-            <!-- مشغل الفيديو الافتراضي المطور -->
-            <video id="video" controls autoplay playsinline></video>
+        <div class="player-container">
+            <video id="video" src="http://asmrasmr.live" autoplay playsinline controls></video>
         </div>
     </div>
 
-    <script>
-        var video = document.getElementById('video');
-        // استخدام رابط البروكسي الداخلي السريع لتمرير البث بدون تهنيج
-        var streamUrl = "/proxy?url=" + encodeURIComponent("http://asmrasmr.live");
-
-        if (Hls.isSupported()) {
-            var hls = new Hls({
-                maxBufferLength: 10, // تحديد حجم التخزين المؤقت لتفادي البطء
-                enableWorker: true
-            });
-            hls.loadSource(streamUrl);
-            hls.attachMedia(video);
-            hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                video.play();
-            });
-        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            // دعم متصفحات آيفون وسفاري تلقائياً
-            video.src = streamUrl;
-            video.addEventListener('loadedmetadata', function() {
-                video.play();
-            });
-        } else {
-            // تجربة تشغيل الرابط كملف مباشر في حال فشل صيغ البث المباشر الأخرى
-            video.src = streamUrl;
-        }
-    </script>
 </body>
 </html>
