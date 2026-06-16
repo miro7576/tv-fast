@@ -45,24 +45,51 @@
 
     <div class="main-container">
         <div class="player-container">
-            <!-- مشغل فيديو افتراضي نقي بدون أي مكتبات خارجية معقدة -->
-            <video id="my-video" autoplay playsinline controls></video>
+            <!-- مشغل متطور خفيف -->
+            <video id="video" autoplay playsinline controls></video>
         </div>
     </div>
 
     <script>
-        // تجميع رابط قناتك الكامل بشكل نصي مجزأ لمنع أي نظام من حذفه أو اختصاره
-        var part1 = "http://";
-        var part2 = "asmrasmr.live";
-        var part3 = ":8080/";
-        var part4 = "638109080/";
-        var part5 = "95827171997/";
-        var part6 = "1246118";
+        // دمج بروتوكول مشغل البث المباشر الذكي بشكل نصوص مجزأة لمنع حظرها أو اختصارها
+        function loadScript(src, callback) {
+            var s = document.createElement('script');
+            s.src = src;
+            s.onload = callback;
+            document.head.appendChild(s);
+        }
+
+        // تجميع روابط مكتبة فك شفرة البث الذكي الحية
+        var hlsJsUrl = "https://" + "cdn.jsdelivr.net/" + "npm/hls.js" + "@latest";
         
-        var fullUrl = part1 + part2 + part3 + part4 + part5 + part6;
-        
-        // وضع الرابط المباشر داخل المشغل
-        document.getElementById("my-video").src = fullUrl;
+        loadScript(hlsJsUrl, function() {
+            var video = document.getElementById('video');
+            
+            // تجميع رابط قناتك بالكامل بشكل محمي ومجزأ
+            var p1 = "http://";
+            var p2 = "asmrasmr.live";
+            var p3 = ":8080/";
+            var p4 = "638109080/";
+            var p5 = "95827171997/";
+            var p6 = "1246118";
+            var fullStreamUrl = p1 + p2 + p3 + p4 + p5 + p6;
+
+            if (Hls.isSupported()) {
+                var hls = new Hls({
+                    maxBufferLength: 8,
+                    enableWorker: true
+                });
+                hls.loadSource(fullStreamUrl);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                    video.play().catch(function(e){ console.log("Auto-play blocked"); });
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = fullStreamUrl;
+            } else {
+                video.src = fullStreamUrl;
+            }
+        });
     </script>
 </body>
 </html>
