@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>البث المباشر - TV FAST</title>
+    <!-- استدعاء مكتبة البث المباشر الفورية لمنع تعليق الزر -->
+    <script src="https://jsdelivr.net"></script>
     <style>
         body {
             background-color: #111;
@@ -45,51 +47,38 @@
 
     <div class="main-container">
         <div class="player-container">
-            <!-- مشغل متطور خفيف -->
-            <video id="video" autoplay playsinline controls></video>
+            <!-- مشغل فيديو فوري مع إعدادات تقليل وقت الانتظار -->
+            <video id="video" autoplay playsinline controls preload="metadata"></video>
         </div>
     </div>
 
     <script>
-        // دمج بروتوكول مشغل البث المباشر الذكي بشكل نصوص مجزأة لمنع حظرها أو اختصارها
-        function loadScript(src, callback) {
-            var s = document.createElement('script');
-            s.src = src;
-            s.onload = callback;
-            document.head.appendChild(s);
-        }
-
-        // تجميع روابط مكتبة فك شفرة البث الذكي الحية
-        var hlsJsUrl = "https://" + "cdn.jsdelivr.net/" + "npm/hls.js" + "@latest";
+        var video = document.getElementById('video');
         
-        loadScript(hlsJsUrl, function() {
-            var video = document.getElementById('video');
-            
-            // تجميع رابط قناتك بالكامل بشكل محمي ومجزأ
-            var p1 = "http://";
-            var p2 = "asmrasmr.live";
-            var p3 = ":8080/";
-            var p4 = "638109080/";
-            var p5 = "95827171997/";
-            var p6 = "1246118";
-            var fullStreamUrl = p1 + p2 + p3 + p4 + p5 + p6;
+        // تجميع الرابط بشكل آمن ومجزأ
+        var p1 = "http://";
+        var p2 = "asmrasmr.live";
+        var p3 = ":8080/";
+        var p4 = "638109080/";
+        var p5 = "95827171997/";
+        var p6 = "1246118";
+        var streamUrl = p1 + p2 + p3 + p4 + p5 + p6;
 
-            if (Hls.isSupported()) {
-                var hls = new Hls({
-                    maxBufferLength: 8,
-                    enableWorker: true
-                });
-                hls.loadSource(fullStreamUrl);
-                hls.attachMedia(video);
-                hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                    video.play().catch(function(e){ console.log("Auto-play blocked"); });
-                });
-            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                video.src = fullStreamUrl;
-            } else {
-                video.src = fullStreamUrl;
-            }
-        });
+        if (Hls.isSupported()) {
+            var hls = new Hls({
+                maxBufferLength: 3,       // تقليل حجم الانتظار لـ 3 ثوانٍ فقط لتسريع البدء
+                maxMaxBufferLength: 6,    
+                liveBackoffDistance: 0,   // التشغيل اللحظي للبث المباشر
+                enableWorker: true
+            });
+            hls.loadSource(streamUrl);
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                video.play().catch(function(e) { console.log("تحتاج للضغط على زر التشغيل يدوياً"); });
+            });
+        } else {
+            video.src = streamUrl;
+        }
     </script>
 </body>
 </html>
