@@ -7,21 +7,22 @@
     <style>
         * { box-sizing: border-box; }
         body { background-color: #0f111a; color: white; font-family: sans-serif; padding: 20px; margin: 0; display: flex; flex-direction: column; align-items: center; }
-        header { width: 100%; max-width: 500px; text-align: right; margin-bottom: 25px; }
+        header { width: 100%; max-width: 500px; text-align: right; margin-bottom: 25px; padding-right: 10px; }
         header h1 { font-size: 22px; color: #ffffff; font-weight: bold; margin: 0; }
         
         .channels-grid { display: flex; flex-direction: column; gap: 15px; width: 100%; max-width: 500px; }
         
-        /* تصميم الأزرار المطابق تماماً للصورة المرسلة */
-        .btn { display: flex; align-items: center; justify-content: space-between; background-color: #1a1d29; color: #ffffff; padding: 20px; border-radius: 16px; text-decoration: none; font-weight: bold; font-size: 18px; border: 2px solid transparent; transition: all 0.2s ease-in-out; cursor: pointer; width: 100%; }
+        /* تصميم الزر مطابق للصورة المطلوبة */
+        .btn { display: flex; align-items: center; justify-content: space-between; background-color: #1a1d29; color: #ffffff; padding: 15px 20px; border-radius: 16px; text-decoration: none; font-weight: bold; font-size: 18px; border: 2px solid transparent; transition: all 0.2s ease-in-out; cursor: pointer; width: 100%; }
         
-        /* تفعيل حدود مضيئة للأزرار عند التفاعل للحصول على طابع عصري */
         .btn:hover { border-color: #ffffff; background-color: #222638; }
         
-        .channel-name { text-align: right; flex-grow: 1; padding-right: 10px; }
+        .channel-name { text-align: right; flex-grow: 1; }
         
-        /* تنسيق الأيقونة المرافقة لاسم القناة */
-        .channel-logo { width: 55px; height: 55px; object-fit: contain; background: #ffffff; border-radius: 12px; padding: 4px; }
+        /* تصميم الحاوية البيضاء المقوسة للشعار على جهة اليسار */
+        .logo-container { background-color: #ffffff; width: 65px; height: 65px; border-radius: 14px; display: flex; align-items: center; justify-content: center; padding: 5px; flex-shrink: 0; margin-right: 15px; }
+        
+        .channel-logo { width: 100%; height: 100%; object-fit: contain; }
     </style>
 </head>
 <body>
@@ -31,25 +32,32 @@
     </header>
 
     <div class="channels-grid">
-        <!-- روابط القنوات الأصلية دون تعديل مع إضافة الهوية البصرية الجديدة والأيقونات المحددة -->
-        <a class="btn" href="http://asmrasmr.live:8080/live/638109080/95827171997/1246118.m3u8">
+        <a class="btn" href="http://asmrasmr.live">
             <span class="channel-name">beIN SPORTS MAX 1 HD</span>
-            <img src="bein1.png" class="channel-logo" alt="logo">
+            <div class="logo-container">
+                <img src="bein1.png" class="channel-logo" alt="logo">
+            </div>
         </a>
         
-        <a class="btn" href="http://asmrasmr.live:8080/live/638109080/95827171997/1246118.m3u8">
+        <a class="btn" href="http://asmrasmr.live">
             <span class="channel-name">beIN SPORTS MAX 1 SD</span>
-            <img src="bein1.png" class="channel-logo" alt="logo">
+            <div class="logo-container">
+                <img src="bein1.png" class="channel-logo" alt="logo">
+            </div>
         </a>
         
-        <a class="btn" href="http://asmrasmr.live:8080/live/638109080/95827171997/1246118.m3u8">
+        <a class="btn" href="http://asmrasmr.live">
             <span class="channel-name">beIN SPORTS MAX 2 HD</span>
-            <img src="bein2.png" class="channel-logo" alt="logo">
+            <div class="logo-container">
+                <img src="bein2.png" class="channel-logo" alt="logo">
+            </div>
         </a>
         
         <a class="btn" href="http://asmrasmr.live:8080/live/638109080/95827171997/1246118.m3u8">
             <span class="channel-name">beIN SPORTS MAX 2 SD</span>
-            <img src="bein2.png" class="channel-logo" alt="logo">
+            <div class="logo-container">
+                <img src="bein2.png" class="channel-logo" alt="logo">
+            </div>
         </a>
     </div>
 
