@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TV Fast</title>
+    <script src="https://jsdelivr.net"></script>
+    <script src="https://jsdelivr.net"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -15,33 +17,40 @@
         }
         h1 {
             color: #ff9800;
-            font-size: 32px;
-            margin-bottom: 30px;
-            font-weight: bold;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        #player {
+            margin: 15px auto;
+            max-width: 600px;
+            width: 100%;
+            aspect-ratio: 16/9;
+            background-color: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
         }
         .container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 15px;
-            margin-top: 30px;
+            gap: 12px;
+            margin-top: 15px;
         }
         .btn {
             background-color: #1e1e1e;
             color: #ffffff;
             border: 2px solid #ff9800;
-            padding: 15px 30px;
-            font-size: 18px;
+            padding: 14px 20px;
+            font-size: 16px;
             font-weight: bold;
             border-radius: 8px;
-            width: 85%;
+            width: 90%;
             max-width: 400px;
             cursor: pointer;
-            text-decoration: none;
-            display: block;
-            transition: 0.3s;
+            transition: 0.2s;
         }
-        .btn:hover {
+        .btn:hover, .btn.active {
             background-color: #ff9800;
             color: #000000;
         }
@@ -51,22 +60,58 @@
 
     <h1>بث قنوات beIN SPORTS MAX</h1>
 
+    <div id="player"></div>
+
     <div class="container">
-        <!-- beIN SPORTS MAX 1 HD -->
-        <a class="btn" href="http://asmrasmr.live">beIN SPORTS MAX 1 HD</a>
-
-        <!-- beIN SPORTS MAX 1 SD -->
-        <a class="btn" href="http://asmrasmr.live">beIN SPORTS MAX 1 SD</a>
-
-        <!-- beIN SPORTS MAX 2 HD -->
-        <a class="btn" href="http://asmrasmr.live">beIN SPORTS MAX 2 HD</a>
-
-        <!-- beIN SPORTS MAX 2 SD -->
-        <a class="btn" href="http://asmrasmr.live">beIN SPORTS MAX 2 SD</a>
-
-        <!-- beIN MAX 4K -->
-        <a class="btn" href="#" onclick="alert('هذه القناة غير متوفرة حالياً وسيتم إضافة الرابط قريباً'); return false;">beIN MAX 4K</a>
+        <button class="btn" onclick="loadVideo('http://asmrasmr.live', this)">beIN SPORTS MAX 1 HD</button>
+        <button class="btn" onclick="loadVideo('http://asmrasmr.live', this)">beIN SPORTS MAX 1 SD</button>
+        <button class="btn" onclick="loadVideo('http://asmrasmr.live', this)">beIN SPORTS MAX 2 HD</button>
+        <button class="btn" onclick="startExternal('http://asmrasmr.live', this)">beIN SPORTS MAX 2 SD</button>
     </div>
+
+    <script>
+        var mainPlayer = null;
+
+        function loadVideo(url, button) {
+            var btns = document.querySelectorAll('.btn');
+            btns.forEach(b => b.classList.remove('active'));
+            button.classList.add('active');
+
+            if (mainPlayer) {
+                mainPlayer.destroy();
+            }
+
+            mainPlayer = new Clappr.Player({
+                source: url,
+                parentId: "#player",
+                autoPlay: true,
+                width: '100%',
+                height: '100%',
+                mute: false,
+                hlsMinimumConfig: {
+                    maxBufferLength: 30,
+                    maxMaxBufferLength: 60,
+                    enableWorker: true
+                },
+                playback: {
+                    playInline: true,
+                    recycleVideo: true
+                }
+            });
+        }
+
+        function startExternal(url, button) {
+            var btns = document.querySelectorAll('.btn');
+            btns.forEach(b => b.classList.remove('active'));
+            button.classList.add('active');
+            window.open(url, '_blank');
+        }
+
+        window.onload = function() {
+            var firstBtn = document.querySelector('.btn');
+            if (firstBtn) firstBtn.click();
+        }
+    </script>
 
 </body>
 </html>
