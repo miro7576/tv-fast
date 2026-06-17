@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TV Fast</title>
-    <!-- استدعاء مشغل مخصص وخفيف لتشغيل روابط m3u8 داخل المتصفح مباشرة -->
     <script src="https://jsdelivr.net"></script>
     <style>
         body {
@@ -21,6 +20,7 @@
             margin-bottom: 20px;
         }
         #player {
+            display: none;
             margin: 15px auto;
             max-width: 600px;
             width: 100%;
@@ -60,7 +60,6 @@
 
     <h1>بث قنوات beIN SPORTS MAX</h1>
 
-    <!-- المشغل المدمج داخل المتصفح -->
     <div id="player"></div>
 
     <div class="container">
@@ -74,6 +73,9 @@
         var mainPlayer = null;
 
         function loadVideo(url, button) {
+            var playerContainer = document.getElementById('player');
+            playerContainer.style.display = 'block';
+
             var btns = document.querySelectorAll('.btn');
             btns.forEach(b => b.classList.remove('active'));
             button.classList.add('active');
@@ -82,7 +84,6 @@
                 mainPlayer.destroy();
             }
 
-            // إعداد المشغل لكسر حماية الـ 5 ثوانٍ عبر التحديث الذكي والـ Buffer العالي
             mainPlayer = new Clappr.Player({
                 source: url,
                 parentId: "#player",
@@ -90,12 +91,13 @@
                 width: '100%',
                 height: '100%',
                 preload: 'auto',
+                chromecast: false,
                 hlsMinimumConfig: {
-                    maxBufferLength: 40,        // تخزين 40 ثانية مسبقاً لتفادي الانقطاع
+                    maxBufferLength: 40,
                     maxMaxBufferLength: 90,
                     liveBackBufferLength: 10,
                     enableWorker: true,
-                    manifestLoadingMaxRetry: 10, // إعادة المحاولة خلفياً فوراً إذا فصل السيرفر
+                    manifestLoadingMaxRetry: 10,
                     manifestLoadingRetryDelay: 500
                 },
                 playback: {
@@ -103,11 +105,6 @@
                     recycleVideo: true
                 }
             });
-        }
-
-        window.onload = function() {
-            var firstBtn = document.querySelector('.btn');
-            if (firstBtn) firstBtn.click();
         }
     </script>
 
