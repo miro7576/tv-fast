@@ -80,8 +80,9 @@
 <body>
 
     <h1>beIN MAX Fast TV</h1>                   
-    <div class="container">
-        <button class="btn" onclick="startStream('http://asmrasmr.live:8080/live/638109080/95827171997/1295216.m3u8')">
+     <div class="container">
+        <!-- تم تنظيف نصوص الأزرار لترسل الروابط الحقيقية المستقرة مباشرة ليعالجها السكريبت بالأسفل -->
+        <button class="btn" onclick="startStream('http://asmrasmr.live')">
             <img src="/static/bein1.png" alt="MAX 1" class="channel-icon">
             <span>beIN SPORTS MAX 1 HD</span>
         </button>
@@ -98,6 +99,7 @@
             <span>beIN SPORTS MAX 2 SD</span>
         </button>
     </div>
+    
 
     <!-- حاوية المشغل المخفية ذكياً -->
     <div class="video-wrapper" id="player-container">
@@ -111,6 +113,17 @@
             var videoEl = document.getElementById('hidden-player');
             var containerEl = document.getElementById('player-container');
             
+            // 1. تدمير وإعادة بناء عنصر الفيديو لضمان تحديث الروابط ومنع التجميد الشاشات السوداء
+            if (playerInstance) {
+                try { playerInstance.dispose(); } catch(e) {}
+                playerInstance = null;
+                containerEl.innerHTML = '<video id="hidden-player" class="video-js vjs-default-skin" controls playsinline></video>';
+                videoEl = document.getElementById('hidden-player');
+            }
+
+            // 2. دمج السطر المصلح كاملاً هنا لكسر حظر الـ CORS تلقائياً خلف الكواليس وبشكل صحيح
+            var targetUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(url);
+            
             // تهيئة المشغل لأول مرة
             if (!playerInstance) {
                 playerInstance = videojs(videoEl, {
@@ -120,24 +133,18 @@
                 });
             }
 
-            // تفعيل البروكسي لتخطي قيود CORS لحزم m3u8
-            var targetUrl = url;
-            if (url.includes('.m3u8')) {
-                targetUrl = "https://corsproxy.io?" + encodeURIComponent(url);
-            }
-
-            // تحديد نوع البث تلقائياً
+            // تحديد نوع البث تلقائياً وتمرير الرابط المحمي بالبروكسي المصلح
             playerInstance.src({
                 src: targetUrl,
-                type: url.includes('.m3u8') ? 'application/x-mpegURL' : 'video/mp4'
+                type: 'application/x-mpegURL'
             });
 
             playerInstance.ready(function() {
                 // طلب ملء الشاشة للحاوية أو للمشغل مباشرة لضمان العمل على الأندرويد والآيفون
-                if (playerInstance.requestFullscreen) {
-                    playerInstance.requestFullscreen();
-                } else if (videoEl.webkitEnterFullscreen) {
+                if (videoEl.webkitEnterFullscreen) {
                     videoEl.webkitEnterFullscreen(); // مخصص لهواتف الآيفون
+                } else if (playerInstance.requestFullscreen) {
+                    playerInstance.requestFullscreen();
                 }
                 
                 // تشغيل البث تلقائياً
