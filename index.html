@@ -7,12 +7,10 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>TV Fast</title>
-    <!-- استدعاء المكتبة الرسمية لتحديث البث وتثبيت الـ Buffer تلقائياً داخل المتصفح -->
-    <script src="https://jsdelivr.net"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color:   purple    ;
+            background-color: purple;
             color: #121212;
             text-align: center;
             padding: 20px;
@@ -32,11 +30,11 @@
             margin-top: 30px;
         }
         .btn {
-            background-color: ;
+            background-color: transparent;
             color: white;
             border: 2px solid white;
             padding: 10px 15px;
-            font-size: 16px; /* تصغير طفيف لضمان البقاء في سطر واحد مع الأيقونة الكبيرة */
+            font-size: 16px;
             font-weight: bold;
             border-radius: 8px;
             width: 90%;
@@ -45,105 +43,77 @@
             text-decoration: none;
             display: flex;
             align-items: center;
-            justify-content: flex-start; /* محاذاة تبدأ من اليمين بشكل مرتب */
+            justify-content: flex-start;
             padding-right: 20px;
             gap: 15px;
-            white-space: nowrap; /* إجبار النص على البقاء في سطر واحد تماماً */
+            white-space: nowrap;
             transition: 0.3s;
         }
         .btn:hover {
             background-color: white;
             color: #000000;
         }
-        /* تكبير حجم الأيقونات مع الحفاظ على التناسق */
         .channel-icon {
             width: 65px;
             height: 65px;
             object-fit: contain;
             border-radius: 6px;
-            flex-shrink: 0; /* منع انضغاط الصورة */
+            flex-shrink: 0;
         }
-        /* عنصر المشغل الداخلي مخفي تماماً برمجياً ولا يأخذ أي مساحة في الواجهة */
-        #hidden-native-player {
+        #hidden-player {
             display: none;
         }
     </style>
 </head>
 <body>
+
     <h1> beIN MAX Fast TV</h1>
+
     <div class="container">
-        <!-- قنوات البث مربوطة بمعالج التشغيل الفوري التلقائي والتثبيت خلف الكواليس -->
-        <!-- beIN SPORTS MAX 1 HD -->
-        <button class="btn" onclick="openNativePlayer('http://asmrasmr.live')">
+        <button class="btn" onclick="startStream('http://asmrasmr.live')">
             <img src="/static/bein1.png" alt="MAX 1" class="channel-icon">
             <span>beIN SPORTS MAX 1 HD</span>
         </button>
-        <!-- beIN SPORTS MAX 1 SD -->
-        <button class="btn" onclick="openNativePlayer('http://asmrasmr.live')">
+        <button class="btn" onclick="startStream('http://asmrasmr.live')">
             <img src="/static/bein1.png" alt="MAX 1" class="channel-icon">
             <span>beIN SPORTS MAX 1 SD</span>
         </button>
-        <!-- beIN SPORTS MAX 2 HD -->
-        <button class="btn" onclick="openNativePlayer('http://asmrasmr.live')">
+        <button class="btn" onclick="startStream('http://asmrasmr.live')">
             <img src="/static/bein2.png" alt="MAX 2" class="channel-icon">
             <span>beIN SPORTS MAX 2 HD</span>
         </button>
-        <!-- beIN SPORTS MAX 2 SD -->
-        <button class="btn" onclick="openNativePlayer('http://asmrasmr.live')">
+        <button class="btn" onclick="startStream('http://asmrasmr.live')">
             <img src="/static/bein2.png" alt="MAX 2" class="channel-icon">
             <span>beIN SPORTS MAX 2 SD</span>
         </button>
     </div>
 
-    <!-- هذا المشغل مخفي مئة بالمئة ولا يظهر في التصميم، ويستدعيه المتصفح لملء الشاشة فوراً عند الضغط -->
-    <video id="hidden-native-player" controls playsinline></video>
+    <video id="hidden-player" controls playsinline></video>
 
     <script>
-        var hls = null;
-        var video = document.getElementById('hidden-native-player');
-
-        function openNativePlayer(url) {
-            if (hls) {
-                hls.destroy();
-            }
-
-            // تشغيل وتثبيت الـ Buffer وتحديث البث لمنع توقف الـ 10 ثوانٍ
-            if (Hls.isSupported()) {
-                hls = new Hls({
-                    maxBufferLength: 40,
-                    maxMaxBufferLength: 90,
-                    enableWorker: true
-                });
-                hls.loadSource(url);
-                hls.attachMedia(video);
-                
-                hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                    // تشغيل الفيديو واستدعاء وضع ملء الشاشة الافتراضي للمتصفح فوراً
-                    video.play().then(() => {
-                        if (video.requestFullscreen) {
-                            video.requestFullscreen();
-                        } else if (video.webkitRequestFullscreen) {
-                            video.webkitRequestFullscreen();
-                        }
-                    }).catch(e => console.log(e));
-                });
-            } else if (video.canPlayType('application/x-mpegURL')) {
-                video.src = url;
-                video.play().then(() => {
-                    if (video.requestFullscreen) video.requestFullscreen();
-                });
-            }
-        }
-
-        // كود برمي لحفظ نظافة التصميم: عند الخروج من وضع ملء الشاشة يتم إيقاف الفيديو وتفادي بقائه بالواجهة
-        document.addEventListener('fullscreenchange', exitHandler);
-        document.addEventListener('webkitfullscreenchange', exitHandler);
-        function exitHandler() {
-            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-                video.pause();
-                if (hls) hls.destroy();
-            }
+        function startStream(url) {
+            var video = document.getElementById('hidden-player');
+            video.src = url;
+            video.load();
+            
+            video.play().then(() => {
+                if (video.requestFullscreen) {
+                    video.requestFullscreen();
+                } else if (video.webkitRequestFullscreen) {
+                    video.webkitRequestFullscreen();
+                }
+            }).catch(e => {
+                window.open(url, '_blank');
+            });
+            
+            clearInterval(window.streamKeeper);
+            window.streamKeeper = setInterval(function() {
+                var req = new XMLHttpRequest();
+                req.open('GET', url + '?anti_drop=' + new Date().getTime(), true);
+                req.send();
+            }, 8000);
         }
     </script>
+
 </body>
 </html>
