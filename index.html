@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- منع تخزين المتصفح والسيرفر للكود القديم نهائياً -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -24,7 +23,7 @@
             margin-bottom: 20px;
         }
         #player {
-            display: none; /* المشغل مخفي تماماً ولا يظهر أي مربع أسود عند فتح الموقع */
+            display: none; /* المشغل مخفي تماماً ولن يظهر المربع الأسود الفارغ عند فتح الموقع */
             margin: 15px auto;
             max-width: 600px;
             width: 100%;
@@ -77,7 +76,7 @@
         var mainPlayer = null;
 
         function loadVideo(url, button) {
-            // إظهار المشغل فوراً فقط عند النقر
+            // إظهار المشغل فقط عندما يقرر المستخدم النقر على قناة
             var playerContainer = document.getElementById('player');
             playerContainer.style.display = 'block';
 
