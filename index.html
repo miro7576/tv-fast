@@ -2,7 +2,7 @@
     <meta charset="UTF-8">                           <meta name="viewport" content="width=device-width, initial-scale=1.0">                            <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">          <title>TV Fast</title>
-    <!-- استدعاء مكتبة hls.js برمجياً لتشغيل قنوات m3u8 خلف الكواليس -->
+    <!-- استدعاء المكتبة لفك تشفير m3u8 برمجياً خلف الكواليس -->
     <script src="https://jsdelivr.net"></script>
     <style>
         body {
@@ -45,7 +45,7 @@
             object-fit: contain;                             border-radius: 6px;
             flex-shrink: 0;
         }
-        /* المشغل مخفي تماماً ولن يظهر أبداً في تصميم الصفحة */
+        /* المشغل مخفي تماماً ولن يظهر في الواجهة مطلقاً */
         #hidden-player {
             display: none;                               }
     </style>
@@ -71,7 +71,6 @@
         </button>
     </div>
 
-    <!-- مشغلك المخفي كما هو تماماً -->
     <video id="hidden-player" controls playsinline></video>
 
     <script>
@@ -80,46 +79,181 @@
         function startStream(url) {
             var video = document.getElementById('hidden-player');
             
-            // إنهاء الاتصال القديم فوراً لتوفير البيانات ومنع التداخل
             if (hlsInstance) {
                 hlsInstance.destroy();
             }
 
-            // تفعيل فك التشفير التلقائي لروابط m3u8 للأندرويد بدون الخروج من المتصفح
-            if (url.includes('.m3u8') && Hls.isSupported()) {
-                hlsInstance = new Hls();
-                hlsInstance.loadSource(url);
-                hlsInstance.attachMedia(video);
-                hlsInstance.on(Hls.Events.MANIFEST_PARSED, function() {
-                    triggerFullscreen(video);
+            if (url.includes('.m3u8')) {
+                // استخدام بروكسي لتجاوز حظر الـ CORS والـ Response failure من السيرفر المضيف
+                var proxyUrl = "https://herokuapp.com" + url;
+
+                if (Hls.isSupported()) {
+                    hlsInstance = new Hls({
+                        xhrSetup: function (xhr, url) {
+                            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                        }
+                    });
+                    hlsInstance.loadSource(url); // جرب الرابط مباشرة، وإذا استمر الحظر استبدله بـ proxyUrl
+                    hlsInstance.attachMedia(video);
+                    hlsInstance.on(Hls.Events.MANIFEST_PARSED, function() {
+                        triggerFullscreen(video);
+                    });
+                    
+                    hlsInstance.on(Hls.Events.ERROR, function (event, data) {
+                        if (data.details === Hls.ErrorDetails.MANIFEST_LOAD_ERROR) {
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>TV Fast</title>
+    
+    <!-- 1️⃣ الملف الأول: ملف التنسيق المكتوب بشكل صحيح -->
+    <link href="http://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
+    
+    <!-- 2️⃣ الملف الثاني: تم تصحيحه هنا ليعمل كملف سكريبت بدلاً من لينك -->
+    <script src="http://vjs.zencdn.net/8.10.0/video.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: purple;
+            color: #121212;
+            text-align: center;
+            padding: 20px;
+            direction: rtl;
+        }
+        h1 {
+            color: white;
+            font-size: 22px;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .btn {
+            background-color: transparent;
+            color: white;
+            border: 2px solid white;
+            padding: 10px 15px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 420px;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding-right: 20px;
+            gap: 15px;
+            white-space: nowrap;
+            transition: 0.3s;
+        }
+        .btn:hover {
+            background-color: white;
+            color: #000000;
+        }
+        .channel-icon {
+            width: 65px;
+            height: 65px;
+            object-fit: contain;
+            border-radius: 6px;
+            flex-shrink: 0;
+        }
+        /* إخفاء ذكي للمشغل داخل الصفحة دون منعه من وضع ملء الشاشة */
+        .video-wrapper {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>beIN MAX Fast TV</h1>                   
+    <div class="container">
+        <button class="btn" onclick="startStream('http://asmrasmr.live:8080/live/638109080/95827171997/1246128.m3u8')">
+            <img src="/static/bein1.png" alt="MAX 1" class="channel-icon">
+            <span>beIN SPORTS MAX 1 HD</span>
+        </button>
+        <button class="btn" onclick="startStream('http://asmrasmr.live:8080/live/638109080/95827171997/1246128.m3u8')">
+            <img src="/static/bein1.png" alt="MAX 1" class="channel-icon">
+            <span>beIN SPORTS MAX 1 SD</span>
+        </button>
+        <button class="btn" onclick="startStream('http://asmrasmr.live:8080/live/638109080/95827171997/1246128.m3u8')">
+            <img src="/static/bein2.png" alt="MAX 2" class="channel-icon">
+            <span>beIN SPORTS MAX 2 HD</span>
+        </button>
+        <button class="btn" onclick="startStream('http://asmrasmr.live:8080/live/638109080/95827171997/1246128.m3u8')">
+            <img src="/static/bein2.png" alt="MAX 2" class="channel-icon">
+            <span>beIN SPORTS MAX 2 SD</span>
+        </button>
+    </div>
+
+    <!-- حاوية المشغل المخفية ذكياً -->
+    <div class="video-wrapper" id="player-container">
+        <video id="hidden-player" class="video-js vjs-default-skin" controls playsinline></video>
+    </div>
+
+    <script>
+        var playerInstance;
+
+        function startStream(url) {
+            var videoEl = document.getElementById('hidden-player');
+            var containerEl = document.getElementById('player-container');
+            
+            // تهيئة المشغل لأول مرة
+            if (!playerInstance) {
+                playerInstance = videojs(videoEl, {
+                    html5: {
+                        vhs: { overrideNative: true }
+                    }
                 });
-            } else {
-                // الروابط العادية أو هواتف الآيفون
-                video.src = url;
-                video.load();
-                triggerFullscreen(video);
             }
 
-            // حارس البث المعدل لحماية السيرفر من الحظر والخطأ 406
+            // تفعيل البروكسي لتخطي قيود CORS لحزم m3u8
+            var targetUrl = url;
+            if (url.includes('.m3u8')) {
+                targetUrl = "https://corsproxy.io?" + encodeURIComponent(url);
+            }
+
+            // تحديد نوع البث تلقائياً
+            playerInstance.src({
+                src: targetUrl,
+                type: url.includes('.m3u8') ? 'application/x-mpegURL' : 'video/mp4'
+            });
+
+            playerInstance.ready(function() {
+                // طلب ملء الشاشة للحاوية أو للمشغل مباشرة لضمان العمل على الأندرويد والآيفون
+                if (playerInstance.requestFullscreen) {
+                    playerInstance.requestFullscreen();
+                } else if (videoEl.webkitEnterFullscreen) {
+                    videoEl.webkitEnterFullscreen(); // مخصص لهواتف الآيفون
+                }
+                
+                // تشغيل البث تلقائياً
+                playerInstance.play().catch(function(error) {
+                    console.log("الانتقال لملء الشاشة مطلوب لبدء الصوت والبث.");
+                });
+            });
+
+            // مراقب البث الصامت لمنع الانقطاع
             clearInterval(window.streamKeeper);
             window.streamKeeper = setInterval(function() {
-                var req = new XMLHttpRequest();
-                req.open('HEAD', url, true);
-                req.send();
-            }, 30000);
-        }
-
-        function triggerFullscreen(video) {
-            video.play().then(() => {
-                if (video.requestFullscreen) {
-                    video.requestFullscreen();
-                } else if (video.webkitRequestFullscreen) {
-                    video.webkitRequestFullscreen();
-                }
-            }).catch(e => {
-                // إذا رفض المتصفح التشغيل التلقائي بسبب قيود التفاعل، يتم فتحه في تبويب خارجي نظيف
-                window.open(video.src, '_blank');
-            });
+                fetch(url, { method: 'HEAD', mode: 'no-cors' }).catch(e => {});
+            }, 60000);
         }
     </script>
 
