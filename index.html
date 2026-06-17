@@ -7,8 +7,6 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>TV Fast</title>
-    <!-- استدعاء مكتبة HLS القياسية لتأمين الاتصال الدائم بالسيرفر -->
-    <script src="https://jsdelivr.net"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -21,38 +19,22 @@
         h1 {
             color: white;
             font-size: 22px;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
             font-weight: bold;
-        }
-        /* مشغل مدمج لتجنب الخروج لصفحة المتصفح الميتة */
-        .player-box {
-            margin: 10px auto 25px auto;
-            max-width: 420px;
-            width: 90%;
-            aspect-ratio: 16/9;
-            background-color: #000;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 2px solid white;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
-        video {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
         }
         .container {
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 15px;
+            margin-top: 30px;
         }
         .btn {
-            background-color: #1e1e1e;
+            background-color: ;
             color: white;
             border: 2px solid white;
             padding: 10px 15px;
-            font-size: 16px;
+            font-size: 16px; /* تصغير طفيف لضمان البقاء في سطر واحد مع الأيقونة الكبيرة */
             font-weight: bold;
             border-radius: 8px;
             width: 90%;
@@ -61,93 +43,49 @@
             text-decoration: none;
             display: flex;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: flex-start; /* محاذاة تبدأ من اليمين بشكل مرتب */
             padding-right: 20px;
             gap: 15px;
-            white-space: nowrap;
+            white-space: nowrap; /* إجبار النص على البقاء في سطر واحد تماماً */
             transition: 0.3s;
         }
-        .btn:hover, .btn.active {
+        .btn:hover {
             background-color: white;
             color: #000000;
         }
+        /* تكبير حجم الأيقونات مع الحفاظ على التناسق */
         .channel-icon {
             width: 65px;
             height: 65px;
             object-fit: contain;
             border-radius: 6px;
-            flex-shrink: 0;
+            flex-shrink: 0; /* منع انضغاط الصورة */
         }
     </style>
 </head>
 <body>
-
     <h1> beIN MAX Fast TV</h1>
-
-    <!-- صندوق المشغل المدمج الثابت داخل موقعك البنفسجي -->
-    <div class="player-box">
-        <video id="main-video" controls autoplay playsinline></video>
-    </div>
-
     <div class="container">
-        <!-- تم تعديل الروابط وربطها بالمشغل الداخلي لمنع تجميد البث -->
-        <button class="btn" onclick="runStream('http://asmrasmr.live:8080/live/638109080/95827171997/1246128.m3u8', this)">
+        <!-- beIN SPORTS MAX 1 HD -->
+        <a class="btn" href="http://asmrasmr.live:8080/live/638109080/95827171997/1246128.m3u8" target="_blank" rel="noopener noreferrer">
             <img src="/static/bein1.png" alt="MAX 1" class="channel-icon">
             <span>beIN SPORTS MAX 1 HD</span>
-        </button>
-        <button class="btn" onclick="runStream('http://asmrasmr.live', this)">
+        </a>
+        <!-- beIN SPORTS MAX 1 SD -->
+        <a class="btn" href="http://asmrasmr.live:8080/live/638109080/95827171997/1246128.m3u8" target="_blank" rel="noopener noreferrer">
             <img src="/static/bein1.png" alt="MAX 1" class="channel-icon">
             <span>beIN SPORTS MAX 1 SD</span>
-        </button>
-        <button class="btn" onclick="runStream('http://asmrasmr.live', this)">
+        </a>
+        <!-- beIN SPORTS MAX 2 HD -->
+        <a class="btn" href="http://asmrasmr.live:8080/live/638109080/95827171997/1246128.m3u8" target="_blank" rel="noopener noreferrer">
             <img src="/static/bein2.png" alt="MAX 2" class="channel-icon">
             <span>beIN SPORTS MAX 2 HD</span>
-        </button>
-        <button class="btn" onclick="runStream('http://asmrasmr.live', this)">
+        </a>
+        <!-- beIN SPORTS MAX 2 SD -->
+        <a class="btn" href="http://asmrasmr.live:8080/live/638109080/95827171997/1246128.m3u8" target="_blank" rel="noopener noreferrer">
             <img src="/static/bein2.png" alt="MAX 2" class="channel-icon">
             <span>beIN SPORTS MAX 2 SD</span>
-        </button>
+        </a>
     </div>
-
-    <script>
-        var hls = null;
-        var video = document.getElementById('main-video');
-
-        function runStream(url, button) {
-            // تمييز الزر النشط
-            var btns = document.querySelectorAll('.btn');
-            btns.forEach(b => b.classList.remove('active'));
-            button.classList.add('active');
-
-            // تنظيف الاتصال القديم لمنع تداخل البيانات
-            if (hls) {
-                hls.destroy();
-            }
-
-            // تشغيل البث وتثبيت الـ Buffer داخل موقعك البنفسجي
-            if (Hls.isSupported()) {
-                hls = new Hls({
-                    maxBufferLength: 30,
-                    maxMaxBufferLength: 60,
-                    enableWorker: true
-                });
-                hls.loadSource(url);
-                hls.attachMedia(video);
-                hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                    video.play().catch(e => console.log("اضغط لتشغيل الفيديو"));
-                });
-            } else if (video.canPlayType('application/x-mpegURL')) {
-                // دعم متصفحات السافاري والـ iOS المباشر
-                video.src = url;
-                video.play();
-            }
-        }
-
-        // تشغيل القناة الأولى تلقائياً عند فتح الصفحة
-        window.onload = function() {
-            var firstBtn = document.querySelector('.btn');
-            if (firstBtn) firstBtn.click();
-        }
-    </script>
 </body>
 </html>
