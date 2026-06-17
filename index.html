@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TV Fast</title>
+    <!-- تضمين المكتبة البرمجية لتثبيت ومنع توقف بث سيرفرات الـ IPTV -->
+    <script src="https://jsdelivr.net"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -15,23 +17,37 @@
         }
         h1 {
             color: #ff9800;
-            font-size: 32px;
-            margin-bottom: 30px;
+            font-size: 28px;
+            margin-bottom: 20px;
             font-weight: bold;
+        }
+        .player-container {
+            margin: 15px auto;
+            max-width: 600px;
+            width: 100%;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        video {
+            width: 100%;
+            aspect-ratio: 16/9;
+            display: block;
         }
         .container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 15px;
-            margin-top: 30px;
+            gap: 12px;
+            margin-top: 20px;
         }
         .btn {
             background-color: #1e1e1e;
             color: #ffffff;
             border: 2px solid #ff9800;
-            padding: 15px 30px;
-            font-size: 18px;
+            padding: 14px 25px;
+            font-size: 16px;
             font-weight: bold;
             border-radius: 8px;
             width: 85%;
@@ -39,7 +55,7 @@
             cursor: pointer;
             transition: 0.3s;
         }
-        .btn:hover {
+        .btn:hover, .btn.active {
             background-color: #ff9800;
             color: #000000;
         }
@@ -48,25 +64,75 @@
 <body>
 
     <h1>بث قنوات beIN SPORTS MAX</h1>
+    
+    <!-- المشغل الداخلي الذكي للمتصفح -->
+    <div class="player-container">
+        <video id="webPlayer" controls autoplay playsinline></video>
+    </div>
 
     <div class="container">
-        <!-- القنوات المشغلة عبر ExoPlayer برمجياً -->
-        <button class="btn" onclick="openExo('intent://asmrasmr.live:8080/live/638109080/95827171997/1246128.m3u8#Intent;scheme=http;type=video/*;package=com.google.android.exoplayer2.demo;S.browser_fallback_url=http%3A%2F%2Fasmrasmr.live%3A8080%2Flive%2F638109080%2F95827171997%2F1246128.m3u8;end')">beIN SPORTS MAX 1 HD</button>
-        
-        <button class="btn" onclick="openExo('intent://asmrasmr.live:8080/live/638109080/95827171997/1295215.m3u8#Intent;scheme=http;type=video/*;package=com.google.android.exoplayer2.demo;S.browser_fallback_url=http%3A%2F%2Fasmrasmr.live%3A8080%2Flive%2F638109080%2F95827171997%2F1295215.m3u8;end')">beIN SPORTS MAX 1 SD</button>
-        
-        <button class="btn" onclick="openExo('intent://asmrasmr.live:8080/live/638109080/95827171997/1295225.m3u8#Intent;scheme=http;type=video/*;package=com.google.android.exoplayer2.demo;S.browser_fallback_url=http%3A%2F%2Fasmrasmr.live%3A8080%2Flive%2F638109080%2F95827171997%2F1295225.m3u8;end')">beIN SPORTS MAX 2 HD</button>
-        
-        <button class="btn" onclick="openExo('intent://asmrasmr.live:8080/live/638109080/95827171997/1295216.m3u8#Intent;scheme=http;type=video/*;package=com.google.android.exoplayer2.demo;S.browser_fallback_url=http%3A%2F%2Fasmrasmr.live%3A8080%2Flive%2F638109080%2F95827171997%2F1295216.m3u8;end')">beIN SPORTS MAX 2 SD</button>
-
-        <!-- القناة الخامسة بدون رابط -->
+        <button class="btn" onclick="playInternal('http://asmrasmr.live', this)">beIN SPORTS MAX 1 HD</button>
+        <button class="btn" onclick="playInternal('http://asmrasmr.live:8080/live/638109080/95827171997/1246128.m3u8', this)">beIN SPORTS MAX 1 SD</button>
+        <button class="btn" onclick="playInternal('http://asmrasmr.live', this)">beIN SPORTS MAX 2 HD</button>
+        <button class="btn" onclick="playInternal('http://asmrasmr.live', this)">beIN SPORTS MAX 2 SD</button>
         <button class="btn" onclick="alert('هذه القناة غير متوفرة حالياً وسيتم إضافة الرابط قريباً')">beIN MAX 4K</button>
     </div>
 
     <script>
-        function openExo(intentUrl) {
-            // إجبار المتصفح على تشغيل الرابط الخارجي وتخطي جدار الحماية
-            window.location.href = intentUrl;
+        var video = document.getElementById('webPlayer');
+        var hls;
+
+        function playInternal(url, element) {
+            var buttons = document.querySelectorAll('.btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            if(element) element.classList.add('active');
+
+            if (Hls.isSupported()) {
+                if (hls) { hls.destroy(); }
+                
+                // إعدادات متقدمة لمنع السيرفر من قطع البث بعد 10 ثوانٍ وثبات التغذية
+                hls = new Hls({
+                    maxBufferLength: 30,
+                    liveSyncDuration: 3,
+                    manifestLoadingMaxRetry: 10,
+                    levelLoadingMaxRetry: 10
+                });
+                
+                hls.loadSource(url);
+                hls.attachMedia(video);
+                
+                // معالجة الأخطاء وإعادة الاتصال التلقائي في حال حاول السيرفر طرد المتصفح
+                hls.on(Hls.Events.ERROR, function (event, data) {
+                    if (data.fatal) {
+                        switch (data.type) {
+                            case Hls.ErrorTypes.NETWORK_ERROR:
+                                hls.startLoad();
+                                break;
+                            case Hls.ErrorTypes.MEDIA_ERROR:
+                                hls.recoverMediaError();
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                });
+
+                hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                    video.play().catch(function(e) { console.log("Play blocked by browser policy"); });
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                // دعم أجهزة آبل والأنظمة المتوافقة أصلياً
+                video.src = url;
+                video.addEventListener('loadedmetadata', function() {
+                    video.play();
+                });
+            }
+        }
+
+        // تشغيل القناة الأولى تلقائياً عند فتح الموقع
+        window.onload = function() {
+            var firstChannel = document.querySelector('.btn');
+            if (firstChannel) firstChannel.click();
         }
     </script>
 
