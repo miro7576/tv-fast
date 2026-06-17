@@ -44,14 +44,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 15px; /* مسافة بين الأيقونة والنص */
+            gap: 15px;
             transition: 0.3s;
         }
         .btn:hover {
             background-color: #ff9800;
             color: #000000;
         }
-        /* ضبط حجم أيقونات القنوات المخصصة */
+        /* ضبط الأيقونات وضمان إخفائها إن تعطلت لتفادي الشعار المكسور */
         .channel-icon {
             width: 35px;
             height: 35px;
@@ -65,22 +65,22 @@
     <div class="container">
         <!-- beIN SPORTS MAX 1 HD -->
         <a class="btn" href="http://asmrasmr.live" target="_blank" rel="noopener noreferrer">
-            <img src="bein1.png" alt="MAX 1" class="channel-icon">
+            <img src="bein1.png" onerror="this.src='BEIN1.png'; this.onerror=null;" alt="MAX 1" class="channel-icon">
             <span>beIN SPORTS MAX 1 HD</span>
         </a>
         <!-- beIN SPORTS MAX 1 SD -->
         <a class="btn" href="http://asmrasmr.live" target="_blank" rel="noopener noreferrer">
-            <img src="bein1.png" alt="MAX 1" class="channel-icon">
+            <img src="bein1.png" onerror="this.src='BEIN1.png'; this.onerror=null;" alt="MAX 1" class="channel-icon">
             <span>beIN SPORTS MAX 1 SD</span>
         </a>
         <!-- beIN SPORTS MAX 2 HD -->
         <a class="btn" href="http://asmrasmr.live" target="_blank" rel="noopener noreferrer">
-            <img src="bein2.png" alt="MAX 2" class="channel-icon">
+            <img src="bein2.png" onerror="this.src='BEIN2.png'; this.onerror=null;" alt="MAX 2" class="channel-icon">
             <span>beIN SPORTS MAX 2 HD</span>
         </a>
         <!-- beIN SPORTS MAX 2 SD -->
         <a class="btn" href="http://asmrasmr.live" target="_blank" rel="noopener noreferrer">
-            <img src="bein2.png" alt="MAX 2" class="channel-icon">
+            <img src="bein2.png" onerror="this.src='BEIN2.png'; this.onerror=null;" alt="MAX 2" class="channel-icon">
             <span>beIN SPORTS MAX 2 SD</span>
         </a>
     </div>
