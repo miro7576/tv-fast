@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TV Fast</title>
-    <!-- تضمين المكتبة البرمجية لتثبيت ومنع توقف بث سيرفرات الـ IPTV -->
-    <script src="https://jsdelivr.net"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -17,45 +15,33 @@
         }
         h1 {
             color: #ff9800;
-            font-size: 28px;
-            margin-bottom: 20px;
+            font-size: 32px;
+            margin-bottom: 30px;
             font-weight: bold;
-        }
-        .player-container {
-            margin: 15px auto;
-            max-width: 600px;
-            width: 100%;
-            background: #000;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-        video {
-            width: 100%;
-            aspect-ratio: 16/9;
-            display: block;
         }
         .container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 12px;
-            margin-top: 20px;
+            gap: 15px;
+            margin-top: 30px;
         }
         .btn {
             background-color: #1e1e1e;
             color: #ffffff;
             border: 2px solid #ff9800;
-            padding: 14px 25px;
-            font-size: 16px;
+            padding: 15px 30px;
+            font-size: 18px;
             font-weight: bold;
             border-radius: 8px;
             width: 85%;
             max-width: 400px;
             cursor: pointer;
+            text-decoration: none;
+            display: block;
             transition: 0.3s;
         }
-        .btn:hover, .btn.active {
+        .btn:hover {
             background-color: #ff9800;
             color: #000000;
         }
@@ -64,77 +50,23 @@
 <body>
 
     <h1>بث قنوات beIN SPORTS MAX</h1>
-    
-    <!-- المشغل الداخلي الذكي للمتصفح -->
-    <div class="player-container">
-        <video id="webPlayer" controls autoplay playsinline></video>
-    </div>
 
     <div class="container">
-        <button class="btn" onclick="playInternal('http://asmrasmr.live', this)">beIN SPORTS MAX 1 HD</button>
-        <button class="btn" onclick="playInternal('http://asmrasmr.live:8080/live/638109080/95827171997/1246128.m3u8', this)">beIN SPORTS MAX 1 SD</button>
-        <button class="btn" onclick="playInternal('http://asmrasmr.live', this)">beIN SPORTS MAX 2 HD</button>
-        <button class="btn" onclick="playInternal('http://asmrasmr.live', this)">beIN SPORTS MAX 2 SD</button>
-        <button class="btn" onclick="alert('هذه القناة غير متوفرة حالياً وسيتم إضافة الرابط قريباً')">beIN MAX 4K</button>
+        <!-- beIN SPORTS MAX 1 HD -->
+        <a class="btn" href="intent://asmrasmr.live:8080/live/638109080/95827171997/1246128.m3u8#Intent;scheme=http;type=video/*;package=com.google.android.exoplayer2;end">beIN SPORTS MAX 1 HD</a>
+
+        <!-- beIN SPORTS MAX 1 SD -->
+        <a class="btn" href="intent://asmrasmr.live:8080/live/638109080/95827171997/1295215.m3u8#Intent;scheme=http;type=video/*;package=com.google.android.exoplayer2;end">beIN SPORTS MAX 1 SD</a>
+
+        <!-- beIN SPORTS MAX 2 HD -->
+        <a class="btn" href="intent://asmrasmr.live:8080/live/638109080/95827171997/1295225.m3u8#Intent;scheme=http;type=video/*;package=com.google.android.exoplayer2;end">beIN SPORTS MAX 2 HD</a>
+
+        <!-- beIN SPORTS MAX 2 SD -->
+        <a class="btn" href="intent://asmrasmr.live:8080/live/638109080/95827171997/1295216.m3u8#Intent;scheme=http;type=video/*;package=com.google.android.exoplayer2;end">beIN SPORTS MAX 2 SD</a>
+
+        <!-- beIN MAX 4K -->
+        <a class="btn" href="#" onclick="alert('هذه القناة غير متوفرة حالياً وسيتم إضافة الرابط قريباً'); return false;">beIN MAX 4K</a>
     </div>
-
-    <script>
-        var video = document.getElementById('webPlayer');
-        var hls;
-
-        function playInternal(url, element) {
-            var buttons = document.querySelectorAll('.btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            if(element) element.classList.add('active');
-
-            if (Hls.isSupported()) {
-                if (hls) { hls.destroy(); }
-                
-                // إعدادات متقدمة لمنع السيرفر من قطع البث بعد 10 ثوانٍ وثبات التغذية
-                hls = new Hls({
-                    maxBufferLength: 30,
-                    liveSyncDuration: 3,
-                    manifestLoadingMaxRetry: 10,
-                    levelLoadingMaxRetry: 10
-                });
-                
-                hls.loadSource(url);
-                hls.attachMedia(video);
-                
-                // معالجة الأخطاء وإعادة الاتصال التلقائي في حال حاول السيرفر طرد المتصفح
-                hls.on(Hls.Events.ERROR, function (event, data) {
-                    if (data.fatal) {
-                        switch (data.type) {
-                            case Hls.ErrorTypes.NETWORK_ERROR:
-                                hls.startLoad();
-                                break;
-                            case Hls.ErrorTypes.MEDIA_ERROR:
-                                hls.recoverMediaError();
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                });
-
-                hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                    video.play().catch(function(e) { console.log("Play blocked by browser policy"); });
-                });
-            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                // دعم أجهزة آبل والأنظمة المتوافقة أصلياً
-                video.src = url;
-                video.addEventListener('loadedmetadata', function() {
-                    video.play();
-                });
-            }
-        }
-
-        // تشغيل القناة الأولى تلقائياً عند فتح الموقع
-        window.onload = function() {
-            var firstChannel = document.querySelector('.btn');
-            if (firstChannel) firstChannel.click();
-        }
-    </script>
 
 </body>
 </html>
