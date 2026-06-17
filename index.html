@@ -7,107 +7,60 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>TV Fast</title>
-    <script src="https://jsdelivr.net"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: #ffffff;
+            background-color: #ffffff;
+            color: #121212;
             text-align: center;
             padding: 20px;
             direction: rtl;
         }
         h1 {
             color: #ff9800;
-            font-size: 28px;
-            margin-bottom: 20px;
-        }
-        #player {
-            display: none; /* المشغل مخفي تماماً ولن يظهر المربع الأسود الفارغ عند فتح الموقع */
-            margin: 15px auto;
-            max-width: 600px;
-            width: 100%;
-            aspect-ratio: 16/9;
-            background-color: #000;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 2px solid #ff9800;
+            font-size: 32px;
+            margin-bottom: 30px;
+            font-weight: bold;
         }
         .container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 12px;
-            margin-top: 15px;
+            gap: 15px;
+            margin-top: 30px;
         }
         .btn {
             background-color: #1e1e1e;
             color: #ffffff;
             border: 2px solid #ff9800;
-            padding: 14px 20px;
-            font-size: 16px;
+            padding: 15px 30px;
+            font-size: 18px;
             font-weight: bold;
             border-radius: 8px;
-            width: 90%;
+            width: 85%;
             max-width: 400px;
             cursor: pointer;
-            transition: 0.2s;
+            text-decoration: none;
+            display: block;
+            transition: 0.3s;
         }
-        .btn:hover, .btn.active {
+        .btn:hover {
             background-color: #ff9800;
             color: #000000;
         }
     </style>
 </head>
 <body>
-
     <h1>بث قنوات beIN SPORTS MAX</h1>
-
-    <div id="player"></div>
-
     <div class="container">
-        <button class="btn" onclick="loadVideo('http://asmrasmr.live', this)">beIN SPORTS MAX 1 HD</button>
-        <button class="btn" onclick="loadVideo('http://asmrasmr.live', this)">beIN SPORTS MAX 1 SD</button>
-        <button class="btn" onclick="loadVideo('http://asmrasmr.live', this)">beIN SPORTS MAX 2 HD</button>
-        <button class="btn" onclick="loadVideo('http://asmrasmr.live', this)">beIN SPORTS MAX 2 SD</button>
+        <!-- beIN SPORTS MAX 1 HD -->
+        <a class="btn" href="http://asmrasmr.live" target="_blank" rel="noopener noreferrer">beIN SPORTS MAX 1 HD</a>
+        <!-- beIN SPORTS MAX 1 SD -->
+        <a class="btn" href="http://asmrasmr.live" target="_blank" rel="noopener noreferrer">beIN SPORTS MAX 1 SD</a>
+        <!-- beIN SPORTS MAX 2 HD -->
+        <a class="btn" href="http://asmrasmr.live" target="_blank" rel="noopener noreferrer">beIN SPORTS MAX 2 HD</a>
+        <!-- beIN SPORTS MAX 2 SD -->
+        <a class="btn" href="http://asmrasmr.live" target="_blank" rel="noopener noreferrer">beIN SPORTS MAX 2 SD</a>
     </div>
-
-    <script>
-        var mainPlayer = null;
-
-        function loadVideo(url, button) {
-            // إظهار المشغل فقط عندما يقرر المستخدم النقر على قناة
-            var playerContainer = document.getElementById('player');
-            playerContainer.style.display = 'block';
-
-            var btns = document.querySelectorAll('.btn');
-            btns.forEach(b => b.classList.remove('active'));
-            button.classList.add('active');
-
-            if (mainPlayer) {
-                mainPlayer.destroy();
-            }
-
-            mainPlayer = new Clappr.Player({
-                source: url,
-                parentId: "#player",
-                autoPlay: true,
-                width: '100%',
-                height: '100%',
-                preload: 'auto',
-                chromecast: false,
-                hlsMinimumConfig: {
-                    maxBufferLength: 40,
-                    maxMaxBufferLength: 90,
-                    enableWorker: true
-                },
-                playback: {
-                    playInline: true,
-                    recycleVideo: true
-                }
-            });
-        }
-    </script>
-
 </body>
 </html>
