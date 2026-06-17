@@ -79,7 +79,7 @@
 
     <h1>beIN MAX Fast TV</h1>                   
     <div class="container">
-        <!-- روابط قنواتك الحقيقية الأصلية كما تحبها تماماً -->
+        <!-- روابط قنواتك الحقيقية الأصلية جاهزة للعمل -->
         <button class="btn" onclick="startStream('http://asmrasmr.live')">
             <img src="/static/bein1.png" alt="MAX 1" class="channel-icon">
             <span>beIN SPORTS MAX 1 HD</span>
@@ -109,7 +109,6 @@
         function startStream(url) {
             var containerEl = document.getElementById('player-container');
             
-            // تدمير المشغل القديم لتحديث الذاكرة والروابط ومنع التجميد
             if (playerInstance) {
                 try { playerInstance.dispose(); } catch(e) {}
                 playerInstance = null;
@@ -118,10 +117,9 @@
 
             var videoEl = document.getElementById('hidden-player');
 
-            // 💡 توجيه رابط البث عبر البروكسي الداخلي الجديد في سيرفرك لكسر حظر المتصفحات نهائياً
-            var targetUrl = window.location.origin + "/stream-proxy?url=" + encodeURIComponent(url);
+            // 💡 استخدام البروكسي الخارجي المفتوح والمجاني بالكامل لتخطي حظر HTTPS دون دفع سنت واحد لـ Render
+            var targetUrl = "https://allorigins.win" + encodeURIComponent(url);
 
-            // تهيئة المشغل
             playerInstance = videojs(videoEl, {
                 html5: { vhs: { overrideNative: true } }
             });
@@ -132,7 +130,7 @@
             });
 
             playerInstance.ready(function() {
-                // 💡 التركيز المطلق على فتح الفيديو بملء الشاشة الفوري فور النقر
+                // تفعيل وضع ملء الشاشة الفوري والمباشر
                 if (videoEl.webkitEnterFullscreen) {
                     videoEl.webkitEnterFullscreen(); // للآيفون وسفاري
                 } else if (playerInstance.requestFullscreen) {
@@ -144,7 +142,6 @@
                 });
             });
 
-            // مراقب البث الصامت لمنع القطع
             clearInterval(window.streamKeeper);
             window.streamKeeper = setInterval(function() {
                 fetch(url, { method: 'HEAD', mode: 'no-cors' }).catch(e => {});
