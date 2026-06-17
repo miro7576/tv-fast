@@ -2,6 +2,8 @@
     <meta charset="UTF-8">                           <meta name="viewport" content="width=device-width, initial-scale=1.0">                            <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">          <title>TV Fast</title>
+    <!-- استدعاء مكتبة hls.js برمجياً لتشغيل قنوات m3u8 خلف الكواليس -->
+    <script src="https://jsdelivr.net"></script>
     <style>
         body {
             font-family: Arial, sans-serif;                  background-color: purple;
@@ -43,6 +45,7 @@
             object-fit: contain;                             border-radius: 6px;
             flex-shrink: 0;
         }
+        /* المشغل مخفي تماماً ولن يظهر أبداً في تصميم الصفحة */
         #hidden-player {
             display: none;                               }
     </style>
@@ -54,7 +57,7 @@
         <button class="btn" onclick="startStream('http://asmrasmr.live')">
             <img src="/static/bein1.png" alt="MAX 1" class="channel-icon">                                    <span>beIN SPORTS MAX 1 HD</span>
         </button>
-        <button class="btn" onclick="startStream('http://asmrasmr.live:8080/live/638109080/95827171997/1246128.m3u8')">
+        <button class="btn" onclick="startStream('http://asmrasmr.live')">
             <img src="/static/bein1.png" alt="MAX 1" class="channel-icon">
             <span>beIN SPORTS MAX 1 SD</span>
         </button>
@@ -68,30 +71,55 @@
         </button>
     </div>
 
+    <!-- مشغلك المخفي كما هو تماماً -->
     <video id="hidden-player" controls playsinline></video>
 
     <script>
+        var hlsInstance;
+
         function startStream(url) {
             var video = document.getElementById('hidden-player');
-            video.src = url;
-            video.load();
+            
+            // إنهاء الاتصال القديم فوراً لتوفير البيانات ومنع التداخل
+            if (hlsInstance) {
+                hlsInstance.destroy();
+            }
 
-            video.play().then(() => {
-                if (video.requestFullscreen) {
-                    video.requestFullscreen();
-                } else if (video.webkitRequestFullscreen) {                                                           video.webkitRequestFullscreen();
-                }
-            }).catch(e => {
-                window.open(url, '_blank');
-            });
+            // تفعيل فك التشفير التلقائي لروابط m3u8 للأندرويد بدون الخروج من المتصفح
+            if (url.includes('.m3u8') && Hls.isSupported()) {
+                hlsInstance = new Hls();
+                hlsInstance.loadSource(url);
+                hlsInstance.attachMedia(video);
+                hlsInstance.on(Hls.Events.MANIFEST_PARSED, function() {
+                    triggerFullscreen(video);
+                });
+            } else {
+                // الروابط العادية أو هواتف الآيفون
+                video.src = url;
+                video.load();
+                triggerFullscreen(video);
+            }
 
-            // تعديل التوقيت ونوع الطلب لحل مشكلة الخطأ 406 وحظر السيرفر دون لمس أي شيء آخر
+            // حارس البث المعدل لحماية السيرفر من الحظر والخطأ 406
             clearInterval(window.streamKeeper);
             window.streamKeeper = setInterval(function() {
                 var req = new XMLHttpRequest();
-                req.open('HEAD', url, true); 
+                req.open('HEAD', url, true);
                 req.send();
-            }, 30000); 
+            }, 30000);
+        }
+
+        function triggerFullscreen(video) {
+            video.play().then(() => {
+                if (video.requestFullscreen) {
+                    video.requestFullscreen();
+                } else if (video.webkitRequestFullscreen) {
+                    video.webkitRequestFullscreen();
+                }
+            }).catch(e => {
+                // إذا رفض المتصفح التشغيل التلقائي بسبب قيود التفاعل، يتم فتحه في تبويب خارجي نظيف
+                window.open(video.src, '_blank');
+            });
         }
     </script>
 
