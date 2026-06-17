@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- أكواد برمجية لمنع المتصفح من حفظ الكاش إجبارياً -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>TV Fast</title>
     <script src="https://jsdelivr.net"></script>
     <style>
@@ -20,7 +24,7 @@
             margin-bottom: 20px;
         }
         #player {
-            display: none; /* مخفي تماماً في البداية */
+            display: none; /* إخفاء تام ومؤكد للمشغل عند التحميل */
             margin: 15px auto;
             max-width: 600px;
             width: 100%;
@@ -73,7 +77,6 @@
         var mainPlayer = null;
 
         function loadVideo(url, button) {
-            // إظهار المشغل فقط عند الضغط
             var playerContainer = document.getElementById('player');
             playerContainer.style.display = 'block';
 
